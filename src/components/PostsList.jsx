@@ -7,18 +7,22 @@ import { useState, useEffect } from "react"
 
 
 function PostsList({isPosting, onStopPosting}){
-
-
     const [posts, setPosts] = useState([]);
+    // Adding a loading page
+    const [isFetching, setIsFetching] = useState(false);
+    
     // Handling Side effects
     useEffect(()=> 
     {
         async function fetchPosts(){
+            setIsFetching(true)
             const response = await fetch('http://localhost:8080/posts')
             const resData = await response.json()
+            
             setPosts(resData.posts)
+            setIsFetching(false)
         }
-
+        
         fetchPosts()
     }
     , [])
@@ -44,16 +48,24 @@ function PostsList({isPosting, onStopPosting}){
     </Modal>
     ) : null}
     
-    {posts.length>0? (<ul className={classes.post}>
+    {!isFetching && posts.length>0 &&
+    (<ul className={classes.post}>
         {[posts.map((post) => 
             <Post key={post.author} author={post.author} body={post.body}/>)]}
-    </ul>) : ( <div style={{textAlign: "center", color: "white"}}>
-        <h2>There are no posts yet. </h2>
-        <p> start adding some! </p>
-    </div> )}
-    
-    </>
-    )
+    </ul>)}
+
+    {!isFetching && posts.length === 0 &&
+    ( <div style={{textAlign: "center", color: "white"}}>
+    <h2>There are no posts yet. </h2>
+    <p> start adding some! </p>
+</div> )}
+
+    {isFetching && (<div style={{textAlign: "center", color: "white"}}>
+        <p>Loading Post...</p>
+        </div>)
+}
+
+    </>)
 }
 
 export default PostsList;
