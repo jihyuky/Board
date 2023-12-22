@@ -1,17 +1,17 @@
 import Post from './Post'
-import NewPost from './NewPost'
 import classes from './PostsList.module.css'
-import Modal from './Modal'
 import { useState, useEffect } from "react"
 
 
 
-function PostsList({isPosting, onStopPosting}){
+function PostsList(){
     const [posts, setPosts] = useState([]);
+
     // Adding a loading page
     const [isFetching, setIsFetching] = useState(false);
     
     // Handling Side effects
+    // Fetching data from the JSON file to insert into the board. This is the method to do so.
     useEffect(()=> 
     {
         async function fetchPosts(){
@@ -28,8 +28,10 @@ function PostsList({isPosting, onStopPosting}){
     , [])
 
     function addPostHandler(postData){
+        // Adding data into JSON file
         fetch('http://localhost:8080/posts', {
             method: "POST",
+            // stringify method
             body: JSON.stringify(postData),
             headers: {
                 "Content-Type": "application/json"
@@ -39,15 +41,9 @@ function PostsList({isPosting, onStopPosting}){
     }
     return (
     <>
-    {isPosting ? (
-    <Modal onClose={onStopPosting}>
-    <NewPost
-    onCancel={onStopPosting}
-    onAddPost={addPostHandler}>
-    </NewPost>
-    </Modal>
-    ) : null}
+     {/* If isPosting, then have the add post thing up.*/}
     
+     {/* Displaying posts. calling the */}
     {!isFetching && posts.length>0 &&
     (<ul className={classes.post}>
         {[posts.map((post) => 
