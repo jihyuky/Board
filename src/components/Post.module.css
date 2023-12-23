@@ -1,7 +1,7 @@
 .post{
     margin: 1rem 0;
     padding: 1rem;
-    background-color: #7260e2;
+    background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     animation: animate-in 1s ease-out forwards;
@@ -14,7 +14,7 @@
 .author {
     font-size: 0.8rep;
     font-weight: bold;
-    color: #543280;
+    color: #040db9;
     margin: 0;
     text-transform: uppercase;
     text-align: left;
@@ -24,7 +24,7 @@
 .text {
     font-size: 0.8rep;
     font-weight: 200;
-    color: #53416a;
+    color: #000000;
     margin: 0;
     text-transform: lowercase;
     text-align: left;
