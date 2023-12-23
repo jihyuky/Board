@@ -5,6 +5,7 @@ import './index.css'
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import NewPost, {action as newPostAction} from './routes/NewPost.jsx'
 import RootLayout from './routes/RootLayout.jsx'
+import PostDetails, {loader as postDetailsLoader} from "./routes/PostDetails"
 
 
 
@@ -16,7 +17,9 @@ const router = createBrowserRouter([
     element: <Posts />,// App component loaded for this path
     loader: postsLoader,
     children: [{path: "/create-post",element: <NewPost />, action: newPostAction}]}, 
-    
+    {path: "/:id", // dynamic path
+    element: <PostDetails/>,
+  loader: postDetailsLoader}
   ]}
 ])
 
