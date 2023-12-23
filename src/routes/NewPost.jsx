@@ -1,47 +1,52 @@
+import { Link, Form, redirect } from 'react-router-dom';
 import Modal from '../components/Modal';
 import classes from './NewPost.module.css';
-import {useState} from "react"
 
-function NewPost(props) {
-  const [ enteredBody, setEnteredBody ] = useState("")
-  const [ enteredAuthor, setEnteredAuthor ] = useState("")
+function NewPost() {
 
-  function bodyChangeHandler(event){
-      setEnteredBody(event.target.value)
-  }
 
-  function authorChangeHandler(event){
-      setEnteredAuthor(event.target.value)
-  }
 
-  function submitHandler(event){
-      event.preventDefault()
-      const postData = {
-        body: enteredBody,
-        author: enteredAuthor
-      };
-      props.onAddPost(postData)
-      props.onCancel();
-  }
 
   return (
+    
     <Modal>
-    <form className={classes.form} onSubmit={submitHandler}>
+      {/* Modal is wrapping the Form so that it is floating */} 
+      {/* Form with capital F allows route to handle the submit action */} 
+    <Form method="post" className={classes.form} >
       <p>
         <label htmlFor="">Text</label>
-        <textarea id="body" required rows={3} onChange={bodyChangeHandler}/>
+        <textarea id="body" name="body" required rows={3}/>
       </p>
       <p>
         <label htmlFor="name">Your name</label>
-        <input type="text" id="name" required onChange = {authorChangeHandler} />
+        <input type="text" id="name" name="author" required />
       </p>
       <p className={classes.actions}>
-        <button type="button" onClick={props.onCancel}>Cancel</button>
+        <Link type="button" to="..">Cancel</Link>
         <button type="submit">Submit</button>
       </p>
-    </form>
+    </Form>
     </Modal>
   );
 }
 
 export default NewPost;
+// data automatically added by react router
+export async function action({request}){
+  const formData = await request.formData()
+  // formData is complex, so can extract it like below:
+  const postData = Object.fromEntries(formData) // creates {body: "", author: ""}
+  // also can do formData.get("body")
+
+  // await for the request to be sent
+  await fetch('http://localhost:8080/posts', {
+    method: "POST",
+    // stringify method
+    body: JSON.stringify(postData),
+    headers: {
+        "Content-Type": "application/json"
+    }
+})
+  
+return redirect("/");
+}

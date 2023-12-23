@@ -1,65 +1,51 @@
 import Post from './Post'
 import classes from './PostsList.module.css'
-import { useState, useEffect } from "react"
+import { useLoaderData } from 'react-router-dom';
 
 
 
 function PostsList(){
-    const [posts, setPosts] = useState([]);
+    // Replaced useeffect code with this code
+    // Loader is in Posts file and is available because it is exported
+    // or something
+    const posts = useLoaderData()
 
     // Adding a loading page
-    const [isFetching, setIsFetching] = useState(false);
     
     // Handling Side effects
     // Fetching data from the JSON file to insert into the board. This is the method to do so.
-    useEffect(()=> 
-    {
-        async function fetchPosts(){
-            setIsFetching(true)
-            const response = await fetch('http://localhost:8080/posts')
-            const resData = await response.json()
-            
-            setPosts(resData.posts)
-            setIsFetching(false)
-        }
-        
-        fetchPosts()
-    }
-    , [])
+    // useEffect(()=> 
+    // {
+    //     async function fetchPosts(){
+    //         setIsFetching(true)
 
-    function addPostHandler(postData){
-        // Adding data into JSON file
-        fetch('http://localhost:8080/posts', {
-            method: "POST",
-            // stringify method
-            body: JSON.stringify(postData),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        setPosts((existing) => [postData, ...existing])
-    }
+            
+    //         setPosts(resData.posts)
+    //         setIsFetching(false)
+    //     }
+        
+    //     fetchPosts()
+    // }
+    // , [])
+
+
     return (
     <>
      {/* If isPosting, then have the add post thing up.*/}
     
      {/* Displaying posts. calling the */}
-    {!isFetching && posts.length>0 &&
+    {posts.length>0 &&
     (<ul className={classes.post}>
         {[posts.map((post) => 
             <Post key={post.author} author={post.author} body={post.body}/>)]}
     </ul>)}
 
-    {!isFetching && posts.length === 0 &&
+    {posts.length === 0 &&
     ( <div style={{textAlign: "center", color: "white"}}>
     <h2>There are no posts yet. </h2>
     <p> start adding some! </p>
 </div> )}
 
-    {isFetching && (<div style={{textAlign: "center", color: "white"}}>
-        <p>Loading Post...</p>
-        </div>)
-}
 
     </>)
 }
